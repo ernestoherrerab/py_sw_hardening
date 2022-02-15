@@ -1,0 +1,9 @@
+.env
+csv_data/switchInventory.csv
+csv_data/switchInventory_2.csv
+nornir.log
+sw_configs/
+archive/
+testbed.yml
+inventory/
+__pycache__

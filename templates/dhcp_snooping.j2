@@ -1,0 +1,17 @@
+ip dhcp snooping
+!
+{% for vlan in my_dict["vlans"] %}
+ip dhcp snooping vlan {{ vlan }}
+!
+{% endfor %}
+!
+{% for port_channel in my_dict["port_channels"] %}
+interface {{ port_channel }}
+ ip dhcp snooping trust
+!
+{% endfor %}
+{% for interface in my_dict["interfaces"] %}
+interface {{ interface }}
+ ip dhcp snooping trust
+!
+{% endfor %}
