@@ -46,11 +46,10 @@ def generate_config(my_dict, my_template, hostname):
     with open(path_file, "w") as open_file:
         open_file.write(configuration)
 
-def main():
+def parse_args():
     """
-    Main Function
+    Process the command line arguments
     """
-    ### INITIALIZE ARGPARSE
     parser = argparse.ArgumentParser(
         description = "Type -i inventory path to generate a Nornir Inventory\n"
                         " Type -t testbed to generate a Testbed file based on the Nornir Inventory\n"
@@ -67,15 +66,13 @@ def main():
         "-dryrun", "--dryrun", help = "True or False", default="stdout", required=True
     )
     args = parser.parse_args()
+    return args
 
-    ### NORNIR VARIABLES ###
-    username = input("Username: ")
-    password = getpass(prompt="Password: ", stream=None)
-    dict_output = {}
-    snoop_ifs_dict = {}
-    platform_ids = ["swn", "cs", "as", "edgertr"]
-
-    ### INVENTORY BUILD ###
+def main():
+    """
+    Main Function
+    """
+    ### COMMAND LINE ARGUMENS HANDLING ###
     """
     -h For Help
 
@@ -89,15 +86,8 @@ def main():
     Required: Dry Run True or False
     -dryrun True/False
     """
-    ### Command Line Arguments Handling ###
-    if args.inventory:
-        csv_path = Path('csv_data') / args.inventory
-        print(f"Building Inventory from: {csv_path}...")
-        inv.build_inventory(inv.csv_to_yaml(csv_path))
 
-    if args.testbed:
-        inv.build_testbed()
-        print(f"Building Testbed File...")
+    args = parse_args()
     try:
         dryrun_arg = args.dryrun.capitalize()
         dryrun_param = eval(dryrun_arg)
@@ -108,9 +98,25 @@ def main():
         print("Exiting...")
         sys.exit()
 
+    if args.inventory:
+        csv_path = Path('csv_data') / args.inventory
+        print(f"Building Inventory from: {csv_path}...")
+        inv.build_inventory(inv.csv_to_yaml(csv_path))
+
+    if args.testbed:
+        inv.build_testbed()
+        print(f"Building Testbed File...")
+
+    ### PROGRAM VARIABLES ###
+    username = input("Username: ")
+    password = getpass(prompt="Password: ", stream=None)
+    dict_output = {}
+    snoop_ifs_dict = {}
+    platform_ids = ["swn", "cs", "as", "edgertr"]
+
     ### INITIALIZE NORNIR ###
     """
-    Fecth sent command data, format results, and put them in a dictionary variable
+    Fetch sent command data, format results, and put them in a dictionary variable
     """
     try:
         print("Initializing connections to devices...")
