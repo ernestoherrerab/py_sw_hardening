@@ -5,7 +5,7 @@ Script to add hardening to switches
 
 
 import inventory_builder as inv
-import argparse
+import parse_args as pargs
 import re
 from pathlib import Path
 from nornir import InitNornir
@@ -46,28 +46,6 @@ def generate_config(my_dict, my_template, hostname):
     with open(path_file, "w") as open_file:
         open_file.write(configuration)
 
-def parse_args():
-    """
-    Process the command line arguments
-    """
-    parser = argparse.ArgumentParser(
-        description = "Type -i inventory path to generate a Nornir Inventory\n"
-                        " Type -t testbed to generate a Testbed file based on the Nornir Inventory\n"
-                        " Type -dryrun True/False"
-        )
-    parser.add_argument(
-        "-i", "--inventory", help = "CSV File Location"
-        )
-    parser.add_argument(
-        "-t", "--testbed", help = "testbed"
-        )
-    required_argument = parser.add_argument_group("Required Arguments")
-    required_argument.add_argument(
-        "-dryrun", "--dryrun", help = "True or False", default="stdout", required=True
-    )
-    args = parser.parse_args()
-    return args
-
 def main():
     """
     Main Function
@@ -87,7 +65,7 @@ def main():
     -dryrun True/False
     """
 
-    args = parse_args()
+    args = pargs.parse_args()
     try:
         dryrun_arg = args.dryrun.capitalize()
         dryrun_param = eval(dryrun_arg)
