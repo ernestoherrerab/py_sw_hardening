@@ -3,17 +3,16 @@
 Script to add hardening to switches
 """
 
-
-import inventory_builder as inv
-import parse_args as pargs
-import re
+from getpass import getpass
+from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
+import re
+import sys
 from nornir import InitNornir
 from nornir_scrapli.tasks import send_commands, send_configs_from_file
 from nornir_utils.plugins.functions import print_result
-from jinja2 import Environment, FileSystemLoader
-from getpass import getpass
-import sys
+import inventory_builder as inv
+import parse_args as pargs
 
 def get_data_task(task):
     """
@@ -47,10 +46,7 @@ def generate_config(my_dict, my_template, hostname):
         open_file.write(configuration)
 
 def main():
-    """
-    Main Function
-    """
-    ### COMMAND LINE ARGUMENS HANDLING ###
+    """Main Function"""
     """
     -h For Help
 
@@ -77,9 +73,14 @@ def main():
         sys.exit()
 
     if args.inventory:
-        csv_path = Path('csv_data') / args.inventory
-        print(f"Building Inventory from: {csv_path}...")
-        inv.build_inventory(inv.csv_to_yaml(csv_path))
+        try:
+            csv_path = Path('csv_data') / args.inventory
+            print(f"Building Inventory from: {csv_path}...")
+            inv.build_inventory(inv.csv_to_yaml(csv_path))
+        except FileNotFoundError as e:
+            print("Inventory File Not Found")
+            print("Exiting...")
+            sys.exit()
 
     if args.testbed:
         inv.build_testbed()

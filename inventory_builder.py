@@ -38,7 +38,7 @@ def build_inventory(csv_yaml_func):
     return create_inventory()
 
 #@build_inventory
-def csv_to_yaml(csv_path):
+def csv_to_yaml(csv_path: str) -> str:
     """
     Function to Convert CSV Data to YAML
     """
@@ -89,6 +89,6 @@ def build_testbed():
 #csv_to_yaml
 
 # This works without using the @decorator
-#csv_path = Path('csv_data') / "example.csv"
+#csv_path = Path('csv_data') / "switchInventory.csv"
 #csv_to_yaml = build_inventory(csv_to_yaml(csv_path))
 #csv_to_yaml
