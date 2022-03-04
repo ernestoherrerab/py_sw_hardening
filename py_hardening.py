@@ -147,7 +147,7 @@ def main():
     print("Generating Configuration Files...")
     for key, _ in snoop_ifs_dict.items():
         host_file = key + ".cfg"
-        generate_config(key, template, host_file)
+        generate_config(snoop_ifs_dict[key], template, host_file)
 
     ### DEPLOY CONFIGURATION FILES TO DEVICES ###
     print("Deploying configurations to devices...")
